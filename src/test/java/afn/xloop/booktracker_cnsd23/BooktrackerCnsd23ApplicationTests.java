@@ -72,4 +72,21 @@ class BooktrackerCnsd23ApplicationTests {
 
 	}
 
+	@Test
+	public void canDeleteBook() throws Exception {
+		Book book1 = new Book(1, "HTML for Babies", "Some Kid", 1999, 26);
+		Book book2 = new Book(2, "C# Expert", "Rox", 2006, 260);
+		Collection<Book> books = new ArrayList<Book>();
+		books.add(book1);
+		books.add(book2);
+
+		books.remove(book1);
+		when(bookrepository.getAllBook()).thenReturn(books);
+		mvc.perform(get("/books/all")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().json(jsonBooks.write(books).getJson()));
+
+	}
+
 }
