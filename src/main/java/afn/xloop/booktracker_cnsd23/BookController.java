@@ -32,7 +32,7 @@ public class BookController {
     @DeleteMapping("")
     public String deleteBook(@RequestBody Book book){
         this.repo.delete(book);
-        return "Book Deleted !" + book.getTitle();
+        return "Book Deleted ! " + book.getTitle();
     }
 
     @PutMapping("")

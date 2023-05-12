@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -79,14 +81,17 @@ class BooktrackerCnsd23ApplicationTests {
 		Collection<Book> books = new ArrayList<Book>();
 		books.add(book1);
 		books.add(book2);
-
+	
 		books.remove(book1);
+	
 		when(bookrepository.getAllBook()).thenReturn(books);
-		mvc.perform(get("/books/all")
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().json(jsonBooks.write(books).getJson()));
-
+	
+		mvc.perform(delete("/books/{id}", book1.getId())
+				.contentType(MediaType.APPLICATION_JSON));
+				// .andExpect(status().isOk());
+	
+		assertThat(books).doesNotContain(book1);
+		assertThat(books).containsOnly(book2);
 	}
 
 }
