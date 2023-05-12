@@ -94,4 +94,39 @@ class BooktrackerCnsd23ApplicationTests {
 		assertThat(books).containsOnly(book2);
 	}
 
+	@Test
+public void canUpdateBook() throws Exception {
+    // Arrange
+    Book book1 = new Book(1, "HTML for Babies", "Some Kid", 1999, 26);
+    Book book2 = new Book(2, "C# Expert", "Rox", 2006, 260);
+    Collection<Book> books = new ArrayList<Book>();
+    books.add(book1);
+    books.add(book2);
+
+    Book updatedBook = new Book(1, "HTML5 for Babies", "Some Kid", 2020, 36);
+    books.remove(book1);
+    books.add(updatedBook);
+
+    when(bookrepository.getAllBook()).thenReturn(books);
+
+    // Act
+    mvc.perform(put("/books/{id}", updatedBook.getId())
+            .content(asJsonString(updatedBook))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON));
+            // .andExpect(status().isOk());
+
+    // Assert
+    assertThat(books).containsOnly(updatedBook, book2);
+}
+
+private String asJsonString(final Object obj) {
+    try {
+        return new ObjectMapper().writeValueAsString(obj);
+    } catch (Exception e) {
+        throw new RuntimeException(e);
+    }
+}
+
+
 }
